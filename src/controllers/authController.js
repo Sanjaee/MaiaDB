@@ -1,10 +1,15 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const AuthService = require("../services/authService");
+require("dotenv").config();
 
+// Route for user registration
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   try {
+    // Register user
     await AuthService.registerUser(username, email, password);
     res.status(200).json({ message: "User registered successfully" });
   } catch (error) {
@@ -12,16 +17,32 @@ router.post("/register", async (req, res) => {
   }
 });
 
+// Route for user login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
+    // Login user
     const user = await AuthService.loginUser(email, password);
-    res.status(200).json({ message: "Login successful", user });
+
+    // Create and send JWT token
+    const token = jwt.sign(
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        isVerified: user.isVerified,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" } // Token expiration time
+    );
+
+    res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     res.status(401).json({ error: error.message });
   }
 });
 
+// Route for verifying token
 router.post("/verify", async (req, res) => {
   const { email, token } = req.body;
   try {
