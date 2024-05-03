@@ -11,12 +11,29 @@ const transporter = nodemailer.createTransport({
 });
 
 module.exports = {
-  sendVerificationEmail: async (email, verificationToken) => {
+  sendVerificationEmail: async (email, username, verificationToken) => {
     const mailOptions = {
       from: "mailtrap@demomailtrap.com",
       to: email,
       subject: "Verification Email",
-      text: `Please use the following verification token to verify your email: ${verificationToken}`,
+      text: `Hello ${username},
+
+      Thank you for signing up with MAIA! We're thrilled to have you on board.
+      
+      To ensure the security of your account and access all the features, please verify your email address by clicking the link below:
+      
+      ${verificationToken}
+      
+      If you have trouble clicking the link, please copy and paste it into your browser's address bar.
+      
+      Once your email is verified, you'll be ready to dive into MAIA exciting features.
+      
+      If you did not register with us, please ignore this email or contact our support team at support@maiadigital.id.
+      
+      Thank you for choosing MAIA!
+      
+      Best regards,
+      MAIA `,
     };
 
     await transporter.sendMail(mailOptions);

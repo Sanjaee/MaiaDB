@@ -14,7 +14,7 @@ module.exports = {
     await UserModel.updateUserVerificationToken(user.id, verificationToken);
 
     // Send verification email
-    await EmailUtils.sendVerificationEmail(email, verificationToken);
+    await EmailUtils.sendVerificationEmail(email, username, verificationToken); // Tambahkan `username` di sini
   },
 
   loginUser: async (email, password) => {
