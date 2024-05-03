@@ -1,10 +1,12 @@
+// src/services/authService.js
+const bcrypt = require("bcryptjs");
 const UserModel = require("../models/user");
-const bcrypt = require("bcrypt");
 const EmailUtils = require("../utils/emailUtils");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   registerUser: async (username, email, password) => {
-    const hashedPassword = await bcrypt.hash(password, 10); // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.createUser(username, email, hashedPassword);
 
     // Generate and save verification token using Math.random()
@@ -52,5 +54,10 @@ module.exports = {
     } catch (error) {
       throw new Error("Verification failed: " + error.message);
     }
+  },
+
+  // Fungsi untuk mendapatkan data pengguna berdasarkan email
+  getUserByEmail: async (email) => {
+    return await UserModel.findUserByEmail(email);
   },
 };

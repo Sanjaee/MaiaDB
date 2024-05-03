@@ -42,13 +42,29 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Route for verifying token
 router.post("/verify", async (req, res) => {
   const { email, token } = req.body;
   try {
     const isVerified = await AuthService.verifyToken(email, token);
     if (isVerified) {
-      res.status(200).json({ message: "Email verified successfully" });
+      // Jika verifikasi berhasil, ambil data pengguna dari AuthService
+      const user = await AuthService.getUserByEmail(email);
+
+      // Buat dan kirim token JWT
+      const jwtToken = jwt.sign(
+        {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          isVerified: user.isVerified,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" } // Waktu kedaluwarsa token
+      );
+
+      res
+        .status(200)
+        .json({ message: "Email verified successfully", token: jwtToken });
     } else {
       res.status(400).json({ error: "Invalid token" });
     }
@@ -56,5 +72,4 @@ router.post("/verify", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 module.exports = router;
