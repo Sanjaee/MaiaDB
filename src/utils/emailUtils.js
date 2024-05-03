@@ -15,7 +15,7 @@ module.exports = {
     const mailOptions = {
       from: "mailtrap@demomailtrap.com",
       to: email,
-      subject: "Verification Email",
+      subject: "Verify Your Email Address to Complete Registration",
       text: `Hello ${username},
 
       Thank you for signing up with MAIA! We're thrilled to have you on board.
