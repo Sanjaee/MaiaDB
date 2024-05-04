@@ -5,11 +5,9 @@ const jwt = require("jsonwebtoken");
 const AuthService = require("../services/authService");
 require("dotenv").config();
 
-// Route for user registration
 router.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
   try {
-    // Register user
     await AuthService.registerUser(username, email, password);
     res.status(200).json({ message: "User registered successfully" });
   } catch (error) {
@@ -17,14 +15,11 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// Route for user login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    // Login user
     const user = await AuthService.loginUser(email, password);
 
-    // Create and send JWT token
     const token = jwt.sign(
       {
         id: user.id,
@@ -33,7 +28,7 @@ router.post("/login", async (req, res) => {
         isVerified: user.isVerified,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" } // Token expiration time
+      { expiresIn: "1h" }
     );
 
     res.status(200).json({ message: "Login successful", token });
@@ -47,10 +42,8 @@ router.post("/verify", async (req, res) => {
   try {
     const isVerified = await AuthService.verifyToken(email, token);
     if (isVerified) {
-      // Jika verifikasi berhasil, ambil data pengguna dari AuthService
       const user = await AuthService.getUserByEmail(email);
 
-      // Buat dan kirim token JWT
       const jwtToken = jwt.sign(
         {
           id: user.id,
@@ -59,7 +52,7 @@ router.post("/verify", async (req, res) => {
           isVerified: user.isVerified,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" } // Waktu kedaluwarsa token
+        { expiresIn: "1h" }
       );
 
       res
