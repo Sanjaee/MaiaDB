@@ -20,9 +20,9 @@ module.exports = {
 
       Thank you for signing up with MAIA! We're thrilled to have you on board.
       
-      To ensure the security of your account and access all the features, please verify your email address by clicking the link below:
+      To ensure the security of your account and access all the features, please verify your email address by the OTP :
       
-      ${verificationToken}
+      *${verificationToken}*
       
       If you have trouble clicking the link, please copy and paste it into your browser's address bar.
       
